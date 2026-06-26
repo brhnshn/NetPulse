@@ -20,6 +20,7 @@ namespace NetPulse.App.UI
         private readonly TextBox _txtHmacKey;
         private readonly CheckBox _chkEnableCircuitBreaker;
         private readonly CheckBox _chkUseUtcTimestamps;
+        private readonly Button _btnUninstall;
         private readonly Button _btnSave;
         private readonly Button _btnCancel;
 
@@ -219,8 +220,21 @@ namespace NetPulse.App.UI
             _btnCancel.FlatAppearance.BorderColor = Color.FromArgb(80, 80, 80);
             _btnCancel.Click += (s, e) => Close();
 
+            _btnUninstall = new Button
+            {
+                Text = "Uygulamayı Kaldır",
+                Location = new Point(15, 445),
+                Size = new Size(150, 30),
+                BackColor = Color.FromArgb(40, 40, 40),
+                ForeColor = Color.Tomato,
+                FlatStyle = FlatStyle.Flat
+            };
+            _btnUninstall.FlatAppearance.BorderColor = Color.Tomato;
+            _btnUninstall.Click += BtnUninstall_Click;
+
             Controls.Add(_btnSave);
             Controls.Add(_btnCancel);
+            Controls.Add(_btnUninstall);
 
             LoadFormValues();
         }
@@ -353,6 +367,48 @@ namespace NetPulse.App.UI
                         DisplayName = string.IsNullOrEmpty(name) ? address : name,
                         IsEnabled = isEnabled
                     });
+                }
+            }
+        }
+
+        private void BtnUninstall_Click(object? sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show(
+                "NetPulse uygulamasını tüm ayarları, logları ve kısayollarıyla birlikte sisteminizden kaldırmak istediğinize emin misiniz?",
+                "Uygulamayı Kaldır",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirm == DialogResult.Yes)
+            {
+                try
+                {
+                    string installDir = @"C:\Program Files\NetPulse";
+                    string uninstallScript = System.IO.Path.Combine(installDir, "Uninstall.ps1");
+
+                    if (System.IO.File.Exists(uninstallScript))
+                    {
+                        var startInfo = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = "powershell.exe",
+                            Arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{uninstallScript}\"",
+                            UseShellExecute = true,
+                            Verb = "runas"
+                        };
+                        System.Diagnostics.Process.Start(startInfo);
+                        
+                        // Close application immediately so files can be deleted
+                        Application.Exit();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Kaldırma betiği bulunamadı. Lütfen kurulum klasörünü manuel olarak silin: " + installDir, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Kaldırma işlemi başlatılamadı: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
