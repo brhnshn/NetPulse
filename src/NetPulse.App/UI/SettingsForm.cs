@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -18,6 +18,8 @@ namespace NetPulse.App.UI
         private readonly NumericUpDown _numRetention;
         private readonly TextBox _txtExportPath;
         private readonly TextBox _txtHmacKey;
+        private readonly CheckBox _chkEnableCircuitBreaker;
+        private readonly CheckBox _chkUseUtcTimestamps;
         private readonly Button _btnSave;
         private readonly Button _btnCancel;
 
@@ -174,6 +176,25 @@ namespace NetPulse.App.UI
             Controls.Add(lblHmacKey);
             Controls.Add(_txtHmacKey);
 
+            _chkEnableCircuitBreaker = new CheckBox
+            {
+                Text = "Devre Kesiciyi (Circuit Breaker) Etkinleştir",
+                Location = new Point(140, 415),
+                Size = new Size(300, 20),
+                ForeColor = Color.White
+            };
+
+            _chkUseUtcTimestamps = new CheckBox
+            {
+                Text = "Zaman Damgası Olarak UTC Kullan",
+                Location = new Point(460, 415),
+                Size = new Size(300, 20),
+                ForeColor = Color.White
+            };
+
+            Controls.Add(_chkEnableCircuitBreaker);
+            Controls.Add(_chkUseUtcTimestamps);
+
             _btnSave = new Button
             {
                 Text = "Ayarları Kaydet",
@@ -270,6 +291,8 @@ namespace NetPulse.App.UI
             _numRetention.Value = conf.LogRetentionDays;
             _txtExportPath.Text = conf.ExportPath;
             _txtHmacKey.Text = conf.HmacKey;
+            _chkEnableCircuitBreaker.Checked = conf.EnableCircuitBreaker;
+            _chkUseUtcTimestamps.Checked = conf.UseUtcTimestamps;
 
             _dgvActiveTargets.Rows.Clear();
             _dgvInactiveTargets.Rows.Clear();
@@ -291,6 +314,8 @@ namespace NetPulse.App.UI
             conf.LogRetentionDays = (int)_numRetention.Value;
             conf.ExportPath = _txtExportPath.Text;
             conf.HmacKey = _txtHmacKey.Text;
+            conf.EnableCircuitBreaker = _chkEnableCircuitBreaker.Checked;
+            conf.UseUtcTimestamps = _chkUseUtcTimestamps.Checked;
 
             conf.Targets.Clear();
             AddTargetsFromGrid(_dgvActiveTargets, isEnabled: true);
