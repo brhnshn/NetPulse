@@ -41,3 +41,8 @@ src/NetPulse.Setup/Resources/TestFolder.zip
 src/NetPulse.Setup/Resources/TestSize/
 installer/iexpress_payload/
 
+## Setup and packaging scripts
+BuildSetup.ps1
+Install.ps1
+installer/
+
