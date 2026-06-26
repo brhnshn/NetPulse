@@ -26,27 +26,20 @@ namespace NetPulse.App.UI
 
                 try
                 {
-                    string logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo.jpg");
-                    if (File.Exists(logoPath))
+                    string icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo.ico");
+                    if (File.Exists(icoPath))
                     {
-                        _backingBitmap = new Bitmap(logoPath);
+                        _cachedIcon = new Icon(icoPath);
                     }
                     else
                     {
-                        var assembly = typeof(IconHelper).Assembly;
-                        using (var stream = assembly.GetManifestResourceStream("NetPulse.App.logo.jpg"))
+                        string logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo.jpg");
+                        if (File.Exists(logoPath))
                         {
-                            if (stream != null)
-                            {
-                                _backingBitmap = new Bitmap(stream);
-                            }
+                            _backingBitmap = new Bitmap(logoPath);
+                            IntPtr hIcon = _backingBitmap.GetHicon();
+                            _cachedIcon = Icon.FromHandle(hIcon);
                         }
-                    }
-
-                    if (_backingBitmap != null)
-                    {
-                        IntPtr hIcon = _backingBitmap.GetHicon();
-                        _cachedIcon = Icon.FromHandle(hIcon);
                     }
                 }
                 catch (Exception)
