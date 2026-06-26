@@ -24,7 +24,7 @@ namespace NetPulse.App.Core
         {
             var result = new FallbackResult();
 
-            // 1. TCP Connect to Port 53 on Target Address
+            // 1. TCP Connect to Port 53 on a known public DNS (Google DNS 8.8.8.8) to verify internet
             try
             {
                 using (var client = new TcpClient())
@@ -33,7 +33,7 @@ namespace NetPulse.App.Core
                     using (var cts = CancellationTokenSource.CreateLinkedTokenSource(ct))
                     {
                         cts.CancelAfter(2000);
-                        await client.ConnectAsync(targetAddress, 53, cts.Token);
+                        await client.ConnectAsync("8.8.8.8", 53, cts.Token);
                         result.TcpPort53Success = client.Connected;
                     }
                 }

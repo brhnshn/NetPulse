@@ -20,6 +20,7 @@ namespace NetPulse.App.Infrastructure
         public string ExportPath { get; set; } = "Exports";
         public string HmacKey { get; set; } = string.Empty;
         public bool UseUtcTimestamps { get; set; } = true;
+        public bool EnableCircuitBreaker { get; set; } = true;
     }
 
     public class ConfigManager : IDisposable
@@ -111,7 +112,8 @@ namespace NetPulse.App.Infrastructure
                             LogRetentionDays = 7,
                             ExportPath = "Exports",
                             HmacKey = "",
-                            UseUtcTimestamps = true
+                            UseUtcTimestamps = true,
+                            EnableCircuitBreaker = true
                         };
                         SaveConfig();
                     }

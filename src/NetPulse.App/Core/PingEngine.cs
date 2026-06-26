@@ -61,6 +61,7 @@ namespace NetPulse.App.Core
 
         public int IntervalMs { get; set; } = 1000;
         public int PingTimeoutMs { get; set; } = 900;
+        public bool EnableCircuitBreaker { get; set; } = true;
 
         public event EventHandler<PingResultEventArgs>? OnPingCompleted;
         public event EventHandler<ConnectionEventArgs>? OnConnectionDropped;
@@ -113,11 +114,13 @@ namespace NetPulse.App.Core
             {
                 UpdateTargets(args.Config.Targets);
                 IntervalMs = args.Config.IntervalMs;
+                EnableCircuitBreaker = args.Config.EnableCircuitBreaker;
             };
 
             // İlk açılışta mevcut konfigürasyonu motora dolduruyoruz
             UpdateTargets(_configManager.Config.Targets);
             IntervalMs = _configManager.Config.IntervalMs;
+            EnableCircuitBreaker = _configManager.Config.EnableCircuitBreaker;
         }
 
 public void UpdateTargets(IEnumerable<Target> newTargets)
@@ -247,7 +250,7 @@ public void UpdateTargets(IEnumerable<Target> newTargets)
             string address = target.Address;
 
             // 1. Check Circuit Breaker status
-            if (_circuitBreaker.IsTripped(address))
+            if (EnableCircuitBreaker && _circuitBreaker.IsTripped(address))
             {
                 return;
             }
@@ -317,7 +320,7 @@ public void UpdateTargets(IEnumerable<Target> newTargets)
                 }
 
                 // Notify if Circuit Breaker tripped
-                if (trippedNow)
+                if (EnableCircuitBreaker && trippedNow)
                 {
                     string msg = $"{address} için üst üste 10 başarısız ping denemesinden sonra devre kesici (Circuit Breaker) tetiklendi. İzleme 60 saniye duraklatıldı.";
                     OnCircuitBreakerTriggered?.Invoke(this, new CircuitBreakerEventArgs(DateTime.Now, address, true, msg));
