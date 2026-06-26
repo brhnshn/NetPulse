@@ -1,0 +1,43 @@
+## Visual Studio/C# ignores
+[Ob]
+[Db]
+bin/
+obj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.db
+*.sqlite
+*.sqlite3
+
+## Build/Publish outputs
+temp_build/
+temp_publish/
+temp_publish_dependent/
+SetupOutput/
+
+## VS Code
+.vscode/
+
+## Rider/Resharper
+.idea/
+_ReSharper*/
+
+## Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Zip archives and installers
+*.zip
+*.msi
+*.exe
+
+## Setup project resources/tests and payloads
+src/NetPulse.Setup/Resources/AppBundle.zip
+src/NetPulse.Setup/Resources/TestFolder/
+src/NetPulse.Setup/Resources/TestFolder.zip
+src/NetPulse.Setup/Resources/TestSize/
+installer/iexpress_payload/
+

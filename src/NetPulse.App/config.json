@@ -1,0 +1,17 @@
+{
+  "Targets": [
+    {
+      "Address": "192.168.1.1",
+      "DisplayName": "Yerel Ağ Geçidi"
+    },
+    {
+      "Address": "8.8.8.8",
+      "DisplayName": "Dış DNS (Google)"
+    }
+  ],
+  "IntervalMs": 1000,
+  "LogRetentionDays": 7,
+  "ExportPath": "Exports",
+  "HmacKey": "",
+  "UseUtcTimestamps": true
+}
