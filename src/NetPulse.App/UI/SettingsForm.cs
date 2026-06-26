@@ -403,7 +403,31 @@ namespace NetPulse.App.UI
                     }
                     else
                     {
-                        MessageBox.Show("Kaldırma betiği bulunamadı. Lütfen kurulum klasörünü manuel olarak silin: " + installDir, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // Geliştirme ortamı için yerel temizlik fallback'i
+                        string desktopPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "NetPulse.lnk");
+                        string startMenuPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu), "Programs\\NetPulse.lnk");
+                        
+                        bool deletedAny = false;
+                        if (System.IO.File.Exists(desktopPath))
+                        {
+                            System.IO.File.Delete(desktopPath);
+                            deletedAny = true;
+                        }
+                        if (System.IO.File.Exists(startMenuPath))
+                        {
+                            System.IO.File.Delete(startMenuPath);
+                            deletedAny = true;
+                        }
+
+                        if (deletedAny)
+                        {
+                            MessageBox.Show("Masaüstü ve Başlat Menüsü kısayolları başarıyla kaldırıldı.", "Temizlik Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Application.Exit();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Kaldırma betiği veya kısayollar bulunamadı. Lütfen kurulum klasörünü manuel olarak silin: " + installDir, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
                 catch (Exception ex)
